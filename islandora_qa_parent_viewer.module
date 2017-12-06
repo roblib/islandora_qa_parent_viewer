@@ -1,0 +1,53 @@
+<?php
+
+/**
+ * @file
+ * Functions for the QA Parent Viewer Module
+ */
+
+
+/**
+ * Implements hook_islandora_qa_viewer_info().
+ */
+function islandora_qa_parent_viewer_islandora_qa_viewer_info(){
+  return array(
+    'islandora_qa_parent_viewer' => array(
+      'label' => t('Parent Viewer'),
+      'callback' => 'islandora_qa_parent_viewer_callback',
+      'description' => t('view the image datastream of a parent object'),
+    ),
+  );
+}
+
+/**
+ * @param array $params
+ * @return
+ *    Markup for a viewer or null.
+ */
+function islandora_qa_parent_viewer_callback($params = array()){
+
+
+  $type = $params['function'];
+  switch($type){
+    case 'view':
+      return _islandora_qa_parent_viewer($params);
+    default:
+      return null;
+  }
+}
+
+function _islandora_qa_parent_viewer($params = array()) {
+  module_load_include('inc', 'islandora', 'includes/utilities');
+  module_load_include('inc', 'islandora_qa', 'includes/viewers');
+  $object = $params['object'];
+  $parents = islandora_get_parents_from_rels_ext($object);
+  // todo: configure which parent, if multiple
+  $parent = $parents[0];
+  $viewer = islandora_qa_get_datastream_image($parent, 'MEDIUM_SIZE');
+  if ($viewer != null) {
+    return $viewer;
+  }
+  else {
+    return "<p class=\"qa-task-error\">The specified image datastream MEDIUM_SIZE does not exist</p>";
+  }
+}

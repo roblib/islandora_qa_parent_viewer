@@ -1,0 +1,7 @@
+name = Islandora QA Workflow - Parent Viewer
+description = A viewer to display a datastream of the parent object.
+package = Islandora Tools
+version = 7.x-dev
+core = 7.x
+dependencies[] = islandora_qa
+
